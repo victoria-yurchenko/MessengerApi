@@ -42,7 +42,19 @@ namespace MessengerApi
                 containerClient.CreateIfNotExists();
                 return containerClient;
             });
-            
+
+            var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                    policy =>
+                    {
+                        policy.WithOrigins("http://localhost:3000")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
+
             builder.Services.AddControllers();
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
@@ -55,8 +67,8 @@ namespace MessengerApi
             var app = builder.Build();
             app.UseAuthorization();
             app.UseSession();
+            app.UseCors(MyAllowSpecificOrigins);
             app.MapControllers();
-
             app.Run();
         }
     }

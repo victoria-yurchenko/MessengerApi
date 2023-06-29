@@ -25,7 +25,8 @@ namespace Messenger.Controllers
         public IEnumerable<ChatMessage> GetMessages()
         {
             var logged = HttpContext.Session.GetString("Logged") ?? string.Empty;
-            var messages = _tableClient.Query<ChatMessage>(m => m.PartitionKey == "Message" && m.To == "");
+            var messages = _tableClient.Query<ChatMessage>(m => m.PartitionKey == "Message" && (m.To == "" || m.To == logged ));
+            //var messages = _tableClient.Query<ChatMessage>(m => m.PartitionKey == "Message");
 
             return messages.ToList();
         }
@@ -35,6 +36,7 @@ namespace Messenger.Controllers
         {
             try
             {
+               // message.From = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
                 await _tableClient.AddEntityAsync(message);
                 return Ok(message);
             }

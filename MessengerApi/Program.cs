@@ -9,20 +9,13 @@ namespace MessengerApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            var connectionString = string.Empty;
-            var accountName = string.Empty;
-            var accountKey = string.Empty;
-            var tableName = string.Empty;
-            var blobContainerName = string.Empty;
-            var storageUrl = string.Empty;
-
             var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-            connectionString = configuration["StorageConnectionString"];
-            accountName = configuration.GetSection("AppSettings")["AccountName"];
-            accountKey = configuration.GetSection("AppSettings")["AccountKey"];
-            tableName = configuration.GetSection("AppSettings")["TableName"];
-            blobContainerName = configuration.GetSection("AppSettings")["BlobContainerName"];
-            storageUrl = configuration.GetSection("AppSettings")["StorageUrl"];
+            var connectionString = configuration["StorageConnectionString"];
+            var accountName = configuration.GetSection("AppSettings")["AccountName"];
+            var accountKey = configuration.GetSection("AppSettings")["AccountKey"];
+            var tableName = configuration.GetSection("AppSettings")["TableName"];
+            var blobContainerName = configuration.GetSection("AppSettings")["BlobContainerName"];
+            var storageUrl = configuration.GetSection("AppSettings")["StorageUrl"];
 
             builder.Services.AddSingleton(provider =>
             {

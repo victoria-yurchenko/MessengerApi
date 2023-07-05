@@ -1,5 +1,6 @@
 using Azure.Data.Tables;
 using Azure.Storage.Blobs;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace MessengerApi
 {
@@ -48,6 +49,7 @@ namespace MessengerApi
                     });
             });
 
+            builder.Services.Configure<FormOptions>(x => x.MultipartBodyLengthLimit = 5000000);
             builder.Services.AddControllers();
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>

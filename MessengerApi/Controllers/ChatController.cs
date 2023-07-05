@@ -32,11 +32,21 @@ namespace Messenger.Controllers
         }
 
         [HttpPost]
+        [RequestSizeLimit(5000000)]
         public async Task<IActionResult> SendMessageAsync(ChatMessage message)
         {
             try
             {
-               // message.From = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+                var bytes = Convert.FromBase64String(message.DataUrl);
+                var blobName = $"{message.RowKey}.{message.DataType}";
+
+                var blobClient = _containerClient.GetBlobClient(blobName);
+
+                using (var ms = new MemoryStream(bytes))
+                    blobClient.Upload(ms);
+                
+                message.DataUrl = blobClient.Uri.AbsoluteUri;
+
                 await _tableClient.AddEntityAsync(message);
                 return Ok(message);
             }

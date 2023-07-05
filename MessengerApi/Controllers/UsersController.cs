@@ -44,7 +44,7 @@ namespace Messenger.Controllers
             var bytes = Convert.FromBase64String(user.Avatar);
             var blobName = $"{user.Name}.jpg";
             var blobClient = _containerClient.GetBlobClient(blobName);
-            using (var ms = new MemoryStream(bytes)) 
+            using (var ms = new MemoryStream(bytes))
                 blobClient.Upload(ms);
             user.Timestamp = DateTimeOffset.UtcNow;
             user.Avatar = blobClient.Uri.AbsoluteUri;
@@ -66,7 +66,7 @@ namespace Messenger.Controllers
             else
             {
                 HttpContext.Session.SetString("Logged", loginUser.RowKey);
-                return RedirectToAction(nameof(Index));
+                return Ok(new { name = loginUser.Name });
             }
         }
     }
